@@ -15,6 +15,7 @@ class Barber(models.Model):
     phone = models.CharField(max_length=20)
     rating = models.FloatField(default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
     is_active = models.BooleanField(default=True)
+    services = models.ManyToManyField('Service', through='BarberService')
 
 class Service(models.Model):
     name = models.CharField(max_length=200)
