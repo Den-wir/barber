@@ -1,11 +1,530 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Barber Minimal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neutral-900: #121212;
+            --neutral-800: #1e1e1e;
+            --neutral-100: #f0f0f0;
+            --neutral-50: #fafafa;
+            --bronze: #a98c5d;
+            --bronze-light: #c7b08e;
+            --text-primary: #212121;
+            --text-secondary: #616161;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+            --radius: 8px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-50);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background-color: var(--bronze);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: var(--bronze-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--bronze);
+            color: var(--bronze);
+        }
+        .btn-outline:hover {
+            background-color: var(--bronze);
+            color: white;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            text-decoration: none;
+        }
+        .logo span {
+            color: var(--bronze);
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--bronze);
+            transition: all 0.2s ease;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 5rem;
+            background: linear-gradient(135deg, var(--neutral-100) 0%, #eaeaea 100%);
+        }
+        .hero-content {
+            max-width: 650px;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.25rem);
+            margin-bottom: 1.5rem;
+            color: var(--neutral-900);
+        }
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+        }
+        .section-title {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+        .section-title h2 {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            color: var(--neutral-900);
+            margin-bottom: 1rem;
+        }
+        .section-title h2 span {
+            color: var(--bronze);
+        }
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .service-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+        }
+        .service-card h3 {
+            font-size: 1.375rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-900);
+            position: relative;
+            display: inline-block;
+        }
+        .service-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background-color: var(--bronze);
+            border-radius: 2px;
+        }
+        .service-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+        .price {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        .gallery {
+            background-color: var(--neutral-50);
+            color: var(--text-primary);
+        }
+        .gallery .section-title h2,
+        .gallery .section-title p {
+            color: var(--neutral-900);
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .gallery-item {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2.25rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .gallery-item:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+        }
+        .gallery-icon {
+            font-size: 2.5rem;
+            color: var(--bronze);
+            margin-bottom: 1.25rem;
+        }
+        .gallery-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--neutral-900);
+        }
+        .gallery-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--neutral-800), var(--neutral-900));
+            color: white;
+            text-align: center;
+            padding: 5rem 0;
+        }
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .cta-content p {
+            font-size: 1.125rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.85;
+        }
+
+        footer {
+            background-color: var(--neutral-900);
+            color: #bbb;
+            padding: 4.5rem 0 2.5rem;
+        }
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1.25rem;
+        }
+        .footer-logo span {
+            color: var(--bronze);
+        }
+        .footer-about p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+        .footer-heading {
+            font-size: 1.25rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .footer-links ul {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .footer-links a:hover {
+            color: var(--bronze);
+            padding-left: 4px;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+            .hero-actions { flex-direction: column; }
+            .section { padding: 4rem 0; }
+            .section-title { margin-bottom: 3rem; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 1.25rem; }
+            .hero h1 { font-size: 2.25rem; }
+            .hero p { font-size: 1rem; }
+            .section-title h2 { font-size: 2rem; }
+            .service-card { padding: 2rem 1.25rem; }
+        }
+    </style>
 </head>
 <body>
-    fdsfdsfg
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">Barber<span>Minimal</span></a>
+            <nav class="nav-links">
+                <a href="{% url 'catalog' %}">Каталог</a>
+                <a href="#gallery">Атмосфера</a>
+                <a href="#contact">Контакты</a>
+            </nav>
+            <button class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Где <span style="color:var(--bronze)">ремесло</span> встречает минимализм</h1>
+                <p>Barber Minimal — премиальный барбершоп в сердце города. Мы создаём безупречные мужские образы с уважением к традициям и вниманием к деталям.</p>
+                <div class="hero-actions">
+                    <a href="#contact" class="btn">Записаться</a>
+                    <a href="#gallery" class="btn btn-outline">Посмотреть интерьер</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Популярные <span>услуги</span></h2>
+                <p>Каждая процедура — это ритуал, сочетающий профессиональные навыки и безупречные материалы.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Классическая стрижка</h3>
+                    <p>Индивидуальный подход: форма лица, структура волос, стиль жизни. Результат — гармония и уверенность.</p>
+                    <div class="price">от 1 800 ₽</div>
+                </div>
+                <div class="service-card">
+                    <h3>Бритьё опасной бритвой</h3>
+                    <p>Тёплое полотенце, ароматный лосьон, точность движений — чистое удовольствие для чувствительной кожи.</p>
+                    <div class="price">2 200 ₽</div>
+                </div>
+                <div class="service-card">
+                    <h3>Уход за бородой</h3>
+                    <p>Формирование, коррекция, укладка и питание — для идеального контура и здорового блеска.</p>
+                    <div class="price">от 1 500 ₽</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="gallery">
+        <div class="container">
+            <div class="section-title">
+                <h2>Атмосфера <span>Barber Minimal</span></h2>
+                <p>Пространство, вдохновлённое скандинавским дизайном и японской эстетикой ваби-саби.</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="gallery-icon"><i class="fas fa-couch"></i></div>
+                    <h3 class="gallery-title">Зона ожидания</h3>
+                    <p class="gallery-description">Лёгкие кресла, натуральное дерево, тишина и аромат свежесваренного кофе.</p>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-icon"><i class="fas fa-tools"></i></div>
+                    <h3 class="gallery-title">Рабочая станция</h3>
+                    <p class="gallery-description">Эргономика, точное освещение, инструменты мировых брендов.</p>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-icon"><i class="fas fa-cut"></i></div>
+                    <h3 class="gallery-title">Инструменты</h3>
+                    <p class="gallery-description">Каждый инструмент — предмет коллекции, прошедший строгую стерилизацию.</p>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-icon"><i class="fas fa-user-check"></i></div>
+                    <h3 class="gallery-title">Результат</h3>
+                    <p class="gallery-description">Не просто стрижка — уверенность, подчёркнутая безупречным стилем.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Готовы к идеальному образу?</h2>
+                <p>Запишитесь онлайн или позвоните — наш администратор подберёт удобное время и мастера под ваш запрос.</p>
+                <a href="" class="btn">
+                    <i class="fas fa-phone-alt"></i> +7 (495) 123-45-67
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-about">
+                    <a href="#" class="footer-logo">Barber<span>Minimal</span></a>
+                    <p>Каждый визит — это не просто стрижка. Это ритуал, в котором вы — главный герой.</p>
+                </div>
+                <div class="footer-links">
+                    <h3 class="footer-heading">Услуги</h3>
+                    <ul>
+                        <li><a href="#">Мужская стрижка</a></li>
+                        <li><a href="#">Бритьё опасной бритвой</a></li>
+                        <li><a href="#">Укладка и стайлинг</a></li>
+                        <li><a href="#">Уход за кожей лица</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3 class="footer-heading">Контакты</h3>
+                    <ul>
+                        <li>Сургут, ул. Сургутская, 15</li>
+                        <li>Ежедневно: 10:00 – 22:00</li>
+                        <li><a href="mailto:hello@barberminimal.ru">hello@barberminimal.ru</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Barber Minimal. Разработано с вниманием к деталям.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    const elementPosition = target.offsetTop;
+                    window.scrollTo({
+                        top: elementPosition - offset,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
