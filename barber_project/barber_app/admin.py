@@ -17,7 +17,7 @@ class BarberAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price']
+    list_display = ['name', 'price', 'icon']
     search_fields = ['name']
     list_per_page = 20
 

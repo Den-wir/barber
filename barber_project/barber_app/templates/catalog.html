@@ -199,12 +199,13 @@
             background-color: var(--neutral-900);
             color: #bbb;
             padding: 3rem 0 2rem;
-            margin-top: auto;
+            width: 100%;
         }
         .footer-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
         }
         .footer-logo {
             font-family: 'Playfair Display', serif;
@@ -252,11 +253,13 @@
             font-size: 0.875rem;
             color: #777;
             margin-top: 1.5rem;
+            max-width: 1280px;
+            margin: 1.5rem auto 0;
+            padding: 0 2rem;
         }
 
         @media (max-width: 768px) {
             .nav-links { display: none; }
-            .mobile-toggle { display: block; }
             body { padding-top: 70px; }
         }
     </style>
@@ -264,11 +267,11 @@
 <body>
     <header>
         <div class="container header-container">
-            <a href="{% url 'home' %}" class="logo">Barber<span>Minimal</span></a>
+            <a href="{% url 'barbershop:home' %}" class="logo">Barber<span>Minimal</span></a>
             <nav class="nav-links">
-                <a href="{% url 'home' %}">Главная</a>
-                <a href="index.html#gallery">Атмосфера</a>
-                <a href="index.html#contact">Контакты</a>
+                <a href="{% url 'barbershop:home' %}">Главная</a>
+                <a href="{% url 'barbershop:home' %}#gallery">Атмосфера</a>
+                <a href="{% url 'barbershop:home' %}#contact">Контакты</a>
             </nav>
         </div>
     </header>
@@ -282,45 +285,23 @@
 
     <div class="container">
         <div class="catalog-grid">
-            <div class="catalog-item">
-                <div class="catalog-icon"><i class="fas fa-cut"></i></div>
-                <h3>Классическая стрижка</h3>
-                <p>Подбор формы под черты лица, структуру волос и образ жизни.</p>
-                <div class="catalog-footer">
-                    <div class="catalog-price">1 800 ₽</div>
-                    <a href="" class="btn">Записаться</a>
+            {% for service in services %}
+                <div class="catalog-item">
+                    <div class="catalog-icon">
+                        <i class="fas {{ service.icon|default:'fa-cut' }}"></i>
+                    </div>
+                    <h3>{{ service.name }}</h3>
+                    <p>{{ service.description|default:"Описание отсутствует" }}</p>
+                    <div class="catalog-footer">
+                        <div class="catalog-price">{{ service.price|floatformat:0 }} ₽</div>
+                        <a href="{% url 'barbershop:book_service' service.id %}" class="btn">Записаться</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="catalog-item">
-                <div class="catalog-icon"><i class="fas fa-scissors"></i></div>
-                <h3>Стрижка машинкой</h3>
-                <p>Чёткие линии, современные техники и идеальная симметрия.</p>
-                <div class="catalog-footer">
-                    <div class="catalog-price">1 500 ₽</div>
-                    <a href="" class="btn">Записаться</a>
+            {% empty %}
+                <div class="catalog-item" style="grid-column: 1 / -1; text-align: center;">
+                    <p>Услуги пока не добавлены.</p>
                 </div>
-            </div>
-
-            <div class="catalog-item">
-                <div class="catalog-icon"><i class="fas fa-child"></i></div>
-                <h3>Детская стрижка</h3>
-                <p>Мягкий подход, терпение и опыт работы с детьми от 3 лет.</p>
-                <div class="catalog-footer">
-                    <div class="catalog-price">1 200 ₽</div>
-                    <a href="" class="btn">Записаться</a>
-                </div>
-            </div>
-
-            <div class="catalog-item">
-                <div class="catalog-icon"><i class="fas fa-cut"></i></div>
-                <h3>Бритьё опасной бритвой</h3>
-                <p>Горячее полотенце, натуральные средства, гладкость на 2 дня.</p>
-                <div class="catalog-footer">
-                    <div class="catalog-price">2 200 ₽</div>
-                    <a href="" class="btn">Записаться</a>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 
@@ -328,7 +309,7 @@
         <div class="container">
             <div class="footer-container">
                 <div class="footer-about">
-                    <a href="{% url 'home' %}" class="footer-logo">Barber<span>Minimal</span></a>
+                    <a href="{% url 'barbershop:home' %}" class="footer-logo">Barber<span>Minimal</span></a>
                     <p>Премиум-барбершоп в центре Сургута с 2020 года. Без компромиссов.</p>
                 </div>
                 <div class="footer-links">

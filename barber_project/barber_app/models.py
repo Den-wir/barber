@@ -18,9 +18,34 @@ class Barber(models.Model):
     services = models.ManyToManyField('Service', through='BarberService')
 
 class Service(models.Model):
+    ICON_CHOICES = [
+        ('fa-cut', 'Ножницы'),
+        ('fa-user', 'Пользователь'),
+        ('fa-user-tie', 'Деловой'),
+        ('fa-shower', 'Душ'),
+        ('fa-spa', 'СПА'),
+        ('fa-wind', 'Укладка'),
+        ('fa-hat-cowboy', 'Шляпа'),
+        ('fa-heart', 'Подарок'),
+        ('fa-star', 'Премиум'), 
+        ('fa-gem', 'Элит'),
+        ('fa-shield-alt', 'Гарантия'),
+        ('fa-clock', 'Время'),
+    ]
+       
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    icon = models.CharField(
+        "Иконка (Font Awesome)",
+        max_length=50,
+        choices=ICON_CHOICES,  
+        default="fa-cut",
+        help_text="Выберите иконку из списка"
+    )
+
+    def __str__(self):
+        return self.name
 
 class BarberService(models.Model):
     barber = models.ForeignKey(Barber, on_delete=models.CASCADE)

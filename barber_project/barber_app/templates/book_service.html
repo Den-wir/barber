@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись — {{ service.name }} | Barber Minimal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --neutral-900: #121212;
+            --neutral-800: #1e1e1e;
+            --neutral-100: #f0f0f0;
+            --neutral-50: #fafafa;
+            --bronze: #a98c5d;
+            --bronze-light: #c7b08e;
+            --text-primary: #212121;
+            --text-secondary: #616161;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+            --radius: 8px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-50);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: var(--bronze);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: var(--bronze-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            text-decoration: none;
+        }
+        .logo span { color: var(--bronze); }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0 2.5rem;
+            position: relative;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--bronze);
+            border-radius: 2px;
+        }
+        .hero h1 {
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            color: var(--neutral-900);
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-style: italic;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .booking-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 900px) {
+            .booking-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        /* Левая часть — про услугу и мастеров */
+        .service-info {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .service-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .service-icon {
+            font-size: 2rem;
+            color: var(--bronze);
+        }
+        .service-header h2 {
+            font-size: 1.6rem;
+            color: var(--neutral-900);
+        }
+        .service-price-tag {
+            background: rgba(169, 140, 93, 0.1);
+            color: var(--bronze);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .service-description {
+            margin: 1.5rem 0;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .masters-section h3 {
+            font-size: 1.3rem;
+            margin: 2rem 0 1.25rem;
+            color: var(--neutral-900);
+        }
+        .masters-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .master-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+            background: #fafafa;
+            transition: var(--transition);
+        }
+        .master-card:hover { background: #f5f5f5; }
+        .master-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bronze);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .master-info h4 { font-size: 1.1rem; margin: 0; }
+        .master-rating {
+            color: var(--bronze);
+            font-size: 0.9rem;
+        }
+
+        /* Правая часть — форма записи */
+        .booking-sidebar {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+        .booking-sidebar h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--neutral-900);
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+        .btn-book {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.05rem;
+            margin-top: 0.5rem;
+        }
+
+        .note {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        footer {
+            background-color: var(--neutral-900);
+            color: #bbb;
+            padding: 3rem 0 2rem;
+            margin-top: auto;
+        }
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .footer-logo span { color: var(--bronze); }
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.875rem;
+            color: #777;
+            margin-top: 1.5rem;
+        }
+
+        .why-us-section h3 {
+            font-size: 1.3rem;
+            margin: 2rem 0 1.25rem;
+            color: var(--neutral-900);
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.88rem;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            font-size: 1.3rem;
+            color: var(--bronze);
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-text p {
+            margin: 0.25rem 0 0;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="{% url 'barbershop:home' %}" class="logo">Barber<span>Minimal</span></a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Индивидуальный подход к каждой детали</h1>
+            <p>«Хорошая стрижка — это не тренд. Это уверенность.»</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="booking-grid">
+            <div class="service-info">
+                <div class="service-header">
+                    <div class="service-icon">
+                        <i class="fas {{ service.icon|default:'fa-cut' }}"></i>
+                    </div>
+                    <h2>{{ service.name }}</h2>
+                    <div class="service-price-tag">{{ service.price|floatformat:0 }} ₽</div>
+                </div>
+                <div class="service-description">
+                    {% if service.description %}
+                        {{ service.description }}
+                    {% else %}
+                        Классическая услуга нашего барбершопа, выполненная с вниманием к каждой детали.
+                    {% endif %}
+                </div>
+
+
+            <div class="why-us-section">
+                    <h3>Почему выбирают нас</h3>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="feature-text">
+                                <strong>Точно в срок</strong>
+                                <p>Мы ценим ваше время — начнём и закончим вовремя.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-spa"></i>
+                            </div>
+                            <div class="feature-text">
+                                <strong>Уют и комфорт</strong>
+                                <p>Современный интерьер, кофе и расслабляющая атмосфера.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="feature-text">
+                                <strong>Стерильность</strong>
+                                <p>Все инструменты проходят дезинфекцию после каждого клиента.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="feature-text">
+                            <strong>Опытные мастера</strong>
+                            <p>Наши барберы — профессионалы с опытом от 5 лет и тысячами довольных клиентов.</p>
+                        </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <div class="feature-text">
+                                <strong>Подарочные сертификаты</strong>
+                                <p>Подарите стиль близкому — оформим сертификат на любую сумму за 2 минуты.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {% if barbers %}
+                    <div class="masters-section">
+                        <h3>Мастера, выполняющие эту услугу</h3>
+                        <div class="masters-list">
+                            {% for barber in barbers %}
+                            <div class="master-card">
+                                <div class="master-avatar">
+                                    {{ barber.first_name|first }}{{ barber.last_name|first }}
+                                </div>
+                                <div class="master-info">
+                                    <h4>{{ barber.first_name }} {{ barber.last_name }}</h4>
+                                    <div class="master-rating">
+                                        <i class="fas fa-star"></i> {{ barber.rating|floatformat:1 }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="booking-sidebar">
+                <h3>Записаться онлайн</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" class="form-control" placeholder="Александр" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="+7 (999) 123-45-67" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Дата</label>
+                        <input type="date" id="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Время</label>
+                        <select id="time" class="form-control" required>
+                            <option value="" disabled selected>Выберите время</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00">12:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00</option>
+                            <option value="19:00">19:00</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="barber">Мастер</label>
+                        <select id="barber" class="form-control">
+                            <option value="">Любой</option>
+                            {% for barber in barbers %}
+                                <option value="{{ barber.id }}">{{ barber.first_name }} {{ barber.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-book">Подтвердить запись</button>
+                </form>
+                <div class="note">
+                    После подтверждения менеджер свяжется с вами для уточнения деталей.
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-about">
+                    <a href="{% url 'barbershop:home' %}" class="footer-logo">Barber<span>Minimal</span></a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Barber Minimal. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
